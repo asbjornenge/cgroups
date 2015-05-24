@@ -16,6 +16,17 @@ module.exports = {
             chpr.exec('rmdir '+module.exports.root+'/'+resource+'/'+group, cb)
         }, callback)
     },
+    set : function(group, resourceTree, callback) {
+        Object.keys(resourceTree).forEach(function(resource) {
+            async.each(Object.keys(resourceTree[resource]), function(resourcePath, cb) {
+                var value = resourceTree[resource][resourcePath]
+                // TODO: Don't use echo !! use node fs.write
+                // Cause echo ignores write errors
+                fs.writeFile(module.exports.root+'/'+resource+'/'+group+'/'+resource+'.'+resourcePath, value, cb)
+                //console.log('echo '+value+' '+module.exports.root+'/'+resource+'/'+group+'/'+resource+'.'+resourcePath)
+            }, callback)
+        })
+    },
     getGroups: function(pid, callback) {
         if (!fs.existsSync('/proc/'+pid+'/cgroup')) callback(null, [])
         chpr.exec('cat /proc/'+pid+'/cgroup', function(err, stdout, stderr) {

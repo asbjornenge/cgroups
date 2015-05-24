@@ -25,8 +25,21 @@ it('can create a cgroup', function(done) {
     })
 })
 
-it('can put a process inside a cgroup', function(done) {
+it.only('can set group values', function(done) {
     withGroup({resources : ['cpuset']}, 'testgroup2', function(err, cleanup) {
+        assert(!err)
+        cgroup.set('testgroup2', { cpuset : { cpus : '0' }}, function(err) {
+            assert(!err)
+            var numcpus = cat(cgroup.root+'/cpuset/testgroup2/cpuset.cpus').trim()
+            assert(numcpus == '0')
+            cleanup(done)
+        })
+    })
+})
+
+
+it('can put a process inside a cgroup', function(done) {
+    withGroup({resources : ['cpuset']}, 'testgroup3', function(err, cleanup) {
         assert(!err)
         var child = chpr.spawnSync('bash')
         cgroup.getGroups(child.pid, function(err, groups) {
