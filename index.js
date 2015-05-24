@@ -20,10 +20,7 @@ module.exports = {
         Object.keys(resourceTree).forEach(function(resource) {
             async.each(Object.keys(resourceTree[resource]), function(resourcePath, cb) {
                 var value = resourceTree[resource][resourcePath]
-                // TODO: Don't use echo !! use node fs.write
-                // Cause echo ignores write errors
                 fs.writeFile(module.exports.root+'/'+resource+'/'+group+'/'+resource+'.'+resourcePath, value, cb)
-                //console.log('echo '+value+' '+module.exports.root+'/'+resource+'/'+group+'/'+resource+'.'+resourcePath)
             }, callback)
         })
     },
