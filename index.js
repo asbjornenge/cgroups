@@ -30,7 +30,7 @@ module.exports = {
         })
     },
     movePid : function(pid, group, callback) {
-        fs.writeFile(module.exports.root+'/'+group+'/tasks', pid, callback)
+        fs.writeFile(module.exports.root+'/'+group+'/cgroup.procs', pid, callback)
     }
 }
 
