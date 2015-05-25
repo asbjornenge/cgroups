@@ -49,8 +49,10 @@ it('can put a process inside a cgroup', function(done) {
             cgroups.getGroups(child.pid, function(err, groups) {
                 groups = groups.filter(function(group) { return group.resource == 'cpuset' })
                 assert(groups[0].group == '/testgroup3')
+                child.on('exit', function() {
+                    cleanup(done)
+                })
                 child.kill('SIGHUP')
-                cleanup(done)
             })
         })
     })

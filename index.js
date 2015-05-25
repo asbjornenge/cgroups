@@ -1,6 +1,5 @@
 var fs    = require('fs')
 var async = require('async') 
-var chpr  = require('child_process')
 
 module.exports = {
     root : '/sys/fs/cgroup',
@@ -13,12 +12,12 @@ module.exports = {
                 resourceTree[resource] = resources[resource] 
                 cb = module.exports.set.bind(undefined, group, resourceTree, cb)
             }
-            chpr.exec('mkdir '+module.exports.root+'/'+resource+'/'+group, cb)
+            fs.mkdir(module.exports.root+'/'+resource+'/'+group, cb)
         }, callback)
     },
     remove : function(group, resources, callback) {
         async.each(Object.keys(resources), function(resource, cb) {
-            chpr.exec('rmdir '+module.exports.root+'/'+resource+'/'+group, cb)
+            fs.rmdir(module.exports.root+'/'+resource+'/'+group, cb)
         }, callback)
     },
     set : function(group, resourceTree, callback) {
@@ -31,8 +30,9 @@ module.exports = {
     },
     getGroups: function(pid, callback) {
         if (!fs.existsSync('/proc/'+pid+'/cgroup')) callback(null, [])
-        chpr.exec('cat /proc/'+pid+'/cgroup', function(err, stdout, stderr) {
-            callback(err, parseCgroups(stdout))
+        fs.readFile('/proc/'+pid+'/cgroup', function(err, data) {
+            if (err) { callback(err); return }
+            callback(null, parseCgroups(data.toString()))
         })
     },
     movePid : function(pid, group, callback) {
