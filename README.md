@@ -1,6 +1,6 @@
 # cgroups
 
-This module is an experiment in exposing the [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt) "API" to node. Who know what will happen...
+This module is an experiment in exposing the [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt) "API" to node. Who knows what will happen...
 
 ## Use
 
