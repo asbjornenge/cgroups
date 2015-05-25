@@ -5,13 +5,19 @@ var chpr  = require('child_process')
 module.exports = {
     root : '/sys/fs/cgroup',
 
-    create : function(group, options, callback) {
-        async.each(options.resources, function(resource, cb) {
+    create : function(group, resources, callback) {
+        async.each(Object.keys(resources), function(resource, cb) {
+            if (Object.keys(resources[resource]).length > 0) {
+                // If we are settings values, swap the callback
+                var resourceTree = {}
+                resourceTree[resource] = resources[resource] 
+                cb = module.exports.set.bind(undefined, group, resourceTree, cb)
+            }
             chpr.exec('mkdir '+module.exports.root+'/'+resource+'/'+group, cb)
         }, callback)
     },
-    remove : function(group, options, callback) {
-        async.each(options.resources, function(resource, cb) {
+    remove : function(group, resources, callback) {
+        async.each(Object.keys(resources), function(resource, cb) {
             chpr.exec('rmdir '+module.exports.root+'/'+resource+'/'+group, cb)
         }, callback)
     },

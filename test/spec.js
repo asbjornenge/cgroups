@@ -14,7 +14,7 @@ var withGroup = function(group, opts, callback) {
 }
 
 it('can create a cgroup', function(done) {
-    withGroup('testgroup', {resources : ['cpuset']}, function(err, cleanup) {
+    withGroup('testgroup', {cpuset : {}}, function(err, cleanup) {
         assert(!err)
         assert(fs.lstatSync(cgroups.root+'/cpuset/testgroup').isDirectory())
         cleanup(function(err) {
@@ -26,9 +26,11 @@ it('can create a cgroup', function(done) {
 })
 
 it('can set group values', function(done) {
-    withGroup('testgroup2', {resources : ['cpuset']}, function(err, cleanup) {
+    withGroup('testgroup2', {cpuset : { cpus:'1'}}, function(err, cleanup) {
         assert(!err)
-        cgroups.set('testgroup2', { cpuset : { cpus : '0' }}, function(err) {
+        var numcpus = cat(cgroups.root+'/cpuset/testgroup2/cpuset.cpus').trim()
+        assert(numcpus == '1')
+        cgroups.set('testgroup2', {cpuset : {cpus:'0'}}, function(err) {
             assert(!err)
             var numcpus = cat(cgroups.root+'/cpuset/testgroup2/cpuset.cpus').trim()
             assert(numcpus == '0')
@@ -39,7 +41,7 @@ it('can set group values', function(done) {
 
 
 it('can put a process inside a cgroup', function(done) {
-    withGroup('testgroup3', {resources : ['cpuset']}, function(err, cleanup) {
+    withGroup('testgroup3', {cpuset : {}}, function(err, cleanup) {
         assert(!err)
         var child = chpr.spawn('bash')
         cgroups.movePid(child.pid, 'cpuset/testgroup3', function(err) {
