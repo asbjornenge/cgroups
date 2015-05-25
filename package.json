@@ -1,15 +1,32 @@
 {
   "name": "cgroups",
   "version": "1.0.0",
-  "description": "",
+  "description": "This module is an experiment in exposing the [cgroups](https://www.kernel.org/doc/Documentation/cgroups/cgroups.txt) \"API\" to node. Who knows what will happen...",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R nyan -w --check-leaks"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Asbjorn Enge <asbjorn@hanafjedle.net>",
+  "license": "BSD",
   "dependencies": {
-    "async": "^1.0.0",
+    "async": "^1.0.0"
+  },
+  "devDependencies": {
     "shelljs": "^0.5.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asbjornenge/cgroups.git"
+  },
+  "keywords": [
+    "cgroups",
+    "linux"
+  ],
+  "bugs": {
+    "url": "https://github.com/asbjornenge/cgroups/issues"
+  },
+  "homepage": "https://github.com/asbjornenge/cgroups#readme"
 }
