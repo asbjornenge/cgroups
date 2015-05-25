@@ -11,7 +11,7 @@ var cgroups = require('cgroups')
 cgroups.create('yolo', {cpuset:{cpus:'0'}}, function(err) {
     var child = chpr.spawn('bash')
     cgroups.movePid(child.pid, 'cpuset/yolo', function(err) {
-        // the child is not in the cpuset/yolo cgroup limited to cpu 0
+        // the child is now in the cpuset/yolo cgroup limited to cpu 0
     })
 })
 ```
