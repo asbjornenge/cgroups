@@ -13,7 +13,7 @@ var withGroup = function(group, opts, callback) {
     })
 }
 
-it('can create a cgroups', function(done) {
+it('can create a cgroup', function(done) {
     withGroup('testgroup', {resources : ['cpuset']}, function(err, cleanup) {
         assert(!err)
         assert(fs.lstatSync(cgroups.root+'/cpuset/testgroup').isDirectory())
@@ -38,12 +38,18 @@ it('can set group values', function(done) {
 })
 
 
-it('can put a process inside a cgroups', function(done) {
+it('can put a process inside a cgroup', function(done) {
     withGroup('testgroup3', {resources : ['cpuset']}, function(err, cleanup) {
         assert(!err)
-        var child = chpr.spawnSync('bash')
-        cgroups.getGroups(child.pid, function(err, groups) {
-            cleanup(done)
+        var child = chpr.spawn('bash')
+        cgroups.movePid(child.pid, 'cpuset/testgroup3', function(err) {
+            assert(!err)
+            cgroups.getGroups(child.pid, function(err, groups) {
+                groups = groups.filter(function(group) { return group.resource == 'cpuset' })
+                assert(groups[0].group == '/testgroup3')
+                child.kill('SIGHUP')
+                cleanup(done)
+            })
         })
     })
 })

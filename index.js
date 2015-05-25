@@ -1,4 +1,3 @@
-require('shelljs/global')
 var fs    = require('fs')
 var async = require('async') 
 var chpr  = require('child_process')
@@ -30,15 +29,14 @@ module.exports = {
             callback(err, parseCgroups(stdout))
         })
     },
-    addProcess : function(pid) {
-
+    movePid : function(pid, group, callback) {
+        fs.writeFile(module.exports.root+'/'+group+'/tasks', pid, callback)
     }
 }
 
 var parseCgroups = function(data) {
     return data.split('\n').map(function(line) {
         return line.split(':').reduce(function(obj, current, index) {
-            console.log(index, current)
             if (index == 0) obj['cgid']     = current
             if (index == 1) obj['resource'] = current
             if (index == 2) obj['group']    = current
